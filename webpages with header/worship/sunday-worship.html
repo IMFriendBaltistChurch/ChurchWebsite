@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sunday Worship - IMFBC Church</title>
+
+  <!-- ===============================
+       Global Styles (흰색 테마 + 애플 느낌 모션)
+       =============================== -->
+  <style>
+    /* --------------------------------
+       Reset & Base
+       -------------------------------- */
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #ffffff;     /* 전체 흰색 테마 */
+      color: #000000;                /* 기본 텍스트는 검은색 */
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    h1, h2, h3, h4, h5 {
+      margin: 0;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      margin: 0 0 1em;
+      line-height: 1.6;
+    }
+
+    /* ================= Header 1 ================= */
+    .header1 {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background-color: #F5F5F7;
+        z-index: 100;
+        padding: 10px 0;
+    }
+
+    .header-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 50px;
+    }
+
+    .logo-link img {
+        height: 35px;
+        width: auto;
+    }
+
+    .main-menu {
+        display: flex;
+        gap: 40px;
+    }
+
+    .menu-item {
+        position: relative;
+    }
+
+    .menu-item > a {
+        text-decoration: none;
+        color: #1d1d1f;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 10px 0;
+        display: block;
+        cursor: pointer;
+    }
+
+    /* Dropdown */
+    .menu-item .dropdown {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #fff;
+        border: 1px solid #d6d6d6;
+        border-radius: 6px;
+        min-width: 200px;
+        padding: 8px 0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        z-index: 50;
+        transition: all 0.3s ease;
+    }
+
+    .menu-item:hover .dropdown {
+        display: block;
+    }
+
+    .dropdown a {
+        display: block;
+        padding: 8px 20px;
+        color: #1d1d1f;
+        text-decoration: none;
+        font-size: 13px;
+        transition: all 0.2s ease;
+    }
+
+    .dropdown a:hover {
+        background-color: #e8e8ed;
+        color: #0066cc;
+        transform: scale(1.05);
+    }
+
+    /* ================= Header 2 ================= */
+    .header2 {
+        position: fixed;
+        top: 60px;
+        width: 100%;
+        background-color: #fff;
+        z-index: 90;
+        text-align: center;
+        padding: 15px 0;
+        border-bottom: 1px solid #000;
+    }
+
+    .header2-container {
+        display: inline-flex;
+        gap: 60px;
+    }
+
+    .header2 a {
+        text-decoration: none;
+        color: #1d1d1f;
+        font-size: 18px;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    /* --------------------------------
+       Section 공통 스타일
+       -------------------------------- */
+    section {
+      padding: 60px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    section h2 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 40px;
+      background: linear-gradient(135deg, #000000, #8b8b8b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* --------------------------------
+       애플 스타일 모션 (fade + translate)
+       -------------------------------- */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .scale-on-hover {
+      transition: transform 0.3s ease;
+    }
+
+    /* --------------------------------
+       Video Section (메인 + 갤러리)
+       -------------------------------- */
+    .video-section {
+      position: relative;
+      padding: 100px 0;
+      margin-top: 140px; /* Account for fixed headers */
+    }
+
+    .video-container {
+      position: relative;
+      width: 100%;
+      height: 70vh;             /* 큰 비율 확보 */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    /* 메인 비디오 */
+    .main-video-container {
+      position: relative;
+      z-index: 20;
+      width: 70%;               /* 메인 크기를 키움 */
+      height: 40vw;             /* 비율 고정 */
+      max-height: 70vh;
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    }
+
+    .main-video-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      object-fit: cover;
+    }
+
+    /* 배경 갤러리 */
+    .video-gallery {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 10;
+      filter: blur(2px);       /* 블러 2px로 변경 */
+      opacity: 0.8;            /* 살짝 희미하게 */
+    }
+
+    .gallery-container {
+      display: flex;
+      height: 100%;
+      width: 220%;             /* 💡 폭을 더 크게 늘림 */
+      margin: 0 auto;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .gallery-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .video-thumbnail {
+      flex: 0 0 20%;           /* 크기를 줄여 메인 강조 */
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      scroll-snap-align: center;
+      pointer-events: none;    /* 클릭 불가 */
+    }
+
+    .video-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* 오버레이 (살짝 어두움) */
+    .thumbnail-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.15);
+    }
+
+    /* --------------------------------
+       Worship Info Section - 새로운 디자인 (INTO Worship 스타일)
+       -------------------------------- */
+    .worship-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      margin-top: 80px;
+    }
+
+    .info-card h3 {
+      font-size: 1.9rem;
+      margin-bottom: 25px;
+      background: linear-gradient(135deg, #000000, #8b8b8b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+    }
+
+    .info-card h3::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(135deg, #000000, #8b8b8b);
+      border-radius: 2px;
+    }
+
+    .info-card p,
+    .info-card li {
+      color: #000000;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      margin-bottom: 12px;
+    }
+
+    .info-card ul, .info-card ol {
+      padding-left: 25px;
+    }
+
+    .info-card ul li, .info-card ol li {
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .info-card ul li::marker {
+      color: #000000;
+    }
+
+    .info-card ol li::marker {
+      color: #000000;
+      font-weight: bold;
+    }
+
+    .scripture-quote {
+      border-left: 4px solid #000000;
+      padding: 25px;
+      margin: 25px 0;
+      font-style: italic;
+      background: linear-gradient(135deg, rgba(184, 184, 184, 0.1), rgba(187, 187, 187, 0.1));
+      color: #000000;
+      border-radius: 12px;
+      position: relative;
+      backdrop-filter: blur(10px);
+    }
+
+    .scripture-quote::before {
+      content: '"';
+      font-size: 4rem;
+      color: rgba(116, 116, 116, 0.3);
+      position: absolute;
+      top: -10px;
+      left: 15px;
+      font-family: serif;
+    }
+
+    .online-link {
+      color: #303030 !important;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 8px 16px;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 20px;
+      border: 1px solid rgba(66, 66, 66, 0.3);
+      transition: all 0.3s ease;
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    .online-link:hover {
+      background: rgba(0, 0, 0, 0.2);
+      border-color: #2b63ca;
+      transform: translateX(5px);
+    }
+
+    /* --------------------------------
+       Responsive
+       -------------------------------- */
+    @media (max-width: 1024px) {
+      .main-video-container {
+        width: 85%;
+        height: 50vw;
+      }
+
+      .video-thumbnail {
+        flex: 0 0 30%;
+      }
+
+      .gallery-container {
+        width: 200%; /* 태블릿에서 더 넓게 */
+      }
+    }
+
+    @media (max-width: 600px) {
+      .main-video-container {
+        width: 95%;
+        height: 55vw;
+      }
+
+      .video-thumbnail {
+        flex: 0 0 60%;
+      }
+
+      .gallery-container {
+        width: 220%; /* 모바일에서 더욱 넓게 */
+      }
+
+      .worship-info {
+        grid-template-columns: 1fr;
+      }
+
+      .info-card {
+        padding: 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===============================
+       Header 1 (Fixed Apple-style)
+       =============================== -->
+<header class="header1">
+        <div class="header-container">
+            <a href="../0메인 페이지/index.html" class="logo-link">
+                <img src="IMUSA_logo.png" alt="Church Logo" class="logo">
+            </a>
+            <nav class="main-menu">
+                <div class="menu-item" id="aboutMenu">
+                    <a href="#">About us</a>
+                    <div class="dropdown">
+                        <a href="../about-us/vision.html">Vision of Our Church</a>
+                        <a href="../about-us/our_beliefs/1.html">Our Beliefs</a>
+                        <a href="../about-us/team.html">Our Team</a>
+                        <a href="../about-us/location/1.html">Location</a>
+                    </div>
+                </div>
+                    <div class="menu-item" id="worshipMenu">
+                        <a href="sunday-worship.html">Worship</a>
+                        <div class="dropdown">
+                        <a href="sunday-worship.html">Sunday Worship</a>
+                        <a href="into-worship.html">INTO Worship</a>
+                        </div>
+                    </div>
+                    <div class="menu-item" id="scheduleMenu">
+                        <a href="../schedule/calendar-view.html">Schedule</a>
+                        <div class="dropdown">
+                        <a href="../schedule/list-view.html">List View</a>
+                        <a href="../schedule/calendar-view.html">Calendar View</a>
+                        </div>
+                    </div>
+                    <div class="menu-item" id="ministryMenu">
+                        <a href="../ministry/imusa/imusa.html">Ministry</a>
+                        <div class="dropdown">
+                        <a href="../ministry/kfd/kfd.html">KFD</a>
+                        <a href="../ministry/first-friday/first-friday.html">First Friday</a>
+                        <a href="../ministry/campus/campus.html">Campus</a>
+                        <a href="../ministry/outreach/outreach.html">Outreach</a>
+                        <a href="../ministry/imusa/imusa.html">IMUSA</a>
+                        </div>
+                    </div>
+                    <div class="menu-item" id="churchMenu">
+                        <a href="../church/church.html">Church</a>
+                    </div>
+                    <div class="menu-item" id="connectMenu">
+                        <a href="../connect/connect.html">Connect</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+<!-- ===============================
+       Header 2 (Fixed Apple-style)
+       =============================== -->
+<nav class="header2">
+      <div class="header2-container">
+          <a href="sunday-worship.html">Sunday Worship</a>
+          <a href="into-worship.html">INTO Worship</a>
+      </div>
+  </nav>
+
+
+  <!-- ===============================
+       Main Content 시작
+       =============================== -->
+  <main class="content">
+
+    <!-- ===============================
+         Video Section
+         =============================== -->
+    <section class="video-section fade-in">
+
+      <!-- Section Title -->
+      <h2>Sunday Worship Services</h2>
+
+      <!-- Video Container -->
+      <div class="video-container">
+
+          <!-- Background Video Gallery -->
+          <div class="video-gallery">
+              <div class="gallery-container" id="galleryContainer">
+
+                  <!-- 각 썸네일은 유튜브 썸네일 이미지 기반 -->
+                  <div class="video-thumbnail" data-video="https://www.youtube.com/embed/5zUgiW67fY0?autoplay=1">
+                      <img src="https://img.youtube.com/vi/5zUgiW67fY0/hqdefault.jpg" alt="Sunday Service 1 Thumbnail">
+                      <div class="thumbnail-overlay"></div>
+                  </div>
+
+                  <div class="video-thumbnail" data-video="https://www.youtube.com/embed/_CI6Hq2EcyQ?autoplay=1">
+                      <img src="https://img.youtube.com/vi/_CI6Hq2EcyQ/hqdefault.jpg" alt="Sunday Service 2 Thumbnail">
+                      <div class="thumbnail-overlay"></div>
+                  </div>
+
+                  <div class="video-thumbnail" data-video="https://www.youtube.com/embed/GKlaiIC9xSI?autoplay=1">
+                      <img src="https://img.youtube.com/vi/GKlaiIC9xSI/hqdefault.jpg" alt="Sunday Service 3 Thumbnail">
+                      <div class="thumbnail-overlay"></div>
+                  </div>
+
+                  <div class="video-thumbnail" data-video="https://www.youtube.com/embed/gwXfTT2vi4Y?autoplay=1">
+                      <img src="https://img.youtube.com/vi/gwXfTT2vi4Y/hqdefault.jpg" alt="Sunday Service 4 Thumbnail">
+                      <div class="thumbnail-overlay"></div>
+                  </div>
+
+                  <div class="video-thumbnail" data-video="https://www.youtube.com/embed/wVKNku7Nr0s?autoplay=1">
+                      <img src="https://img.youtube.com/vi/wVKNku7Nr0s/hqdefault.jpg" alt="Sunday Service 5 Thumbnail">
+                      <div class="thumbnail-overlay"></div>
+                  </div>
+
+                  <div class="video-thumbnail" data-video="https://www.youtube.com/embed/DvzX6DZhGrw?autoplay=1">
+                      <img src="https://img.youtube.com/vi/DvzX6DZhGrw/hqdefault.jpg" alt="Sunday Service 6 Thumbnail">
+                      <div class="thumbnail-overlay"></div>
+                  </div>
+
+                  <!-- 추가 썸네일들로 화면을 다 채우기 -->
+                  <div class="video-thumbnail" data-video="https://www.youtube.com/embed/5zUgiW67fY0?autoplay=1">
+                      <img src="https://img.youtube.com/vi/5zUgiW67fY0/hqdefault.jpg" alt="Sunday Service 7 Thumbnail">
+                      <div class="thumbnail-overlay"></div>
+                  </div>
+
+                  <div class="video-thumbnail" data-video="https://www.youtube.com/embed/_CI6Hq2EcyQ?autoplay=1">
+                      <img src="https://img.youtube.com/vi/_CI6Hq2EcyQ/hqdefault.jpg" alt="Sunday Service 8 Thumbnail">
+                      <div class="thumbnail-overlay"></div>
+                  </div>
+
+                  <div class="video-thumbnail" data-video="https://www.youtube.com/embed/GKlaiIC9xSI?autoplay=1">
+                      <img src="https://img.youtube.com/vi/GKlaiIC9xSI/hqdefault.jpg" alt="Sunday Service 9 Thumbnail">
+                      <div class="thumbnail-overlay"></div>
+                  </div>
+
+                  <div class="video-thumbnail" data-video="https://www.youtube.com/embed/gwXfTT2vi4Y?autoplay=1">
+                      <img src="https://img.youtube.com/vi/gwXfTT2vi4Y/hqdefault.jpg" alt="Sunday Service 10 Thumbnail">
+                      <div class="thumbnail-overlay"></div>
+                  </div>
+
+                  <div class="video-thumbnail" data-video="https://www.youtube.com/embed/wVKNku7Nr0s?autoplay=1">
+                      <img src="https://img.youtube.com/vi/wVKNku7Nr0s/hqdefault.jpg" alt="Sunday Service 11 Thumbnail">
+                      <div class="thumbnail-overlay"></div>
+                  </div>
+
+                  <div class="video-thumbnail" data-video="https://www.youtube.com/embed/DvzX6DZhGrw?autoplay=1">
+                      <img src="https://img.youtube.com/vi/DvzX6DZhGrw/hqdefault.jpg" alt="Sunday Service 12 Thumbnail">
+                      <div class="thumbnail-overlay"></div>
+                  </div>
+
+                  <div class="video-thumbnail" data-video="https://www.youtube.com/embed/5zUgiW67fY0?autoplay=1">
+                      <img src="https://img.youtube.com/vi/5zUgiW67fY0/hqdefault.jpg" alt="Sunday Service 13 Thumbnail">
+                      <div class="thumbnail-overlay"></div>
+                  </div>
+
+                  <div class="video-thumbnail" data-video="https://www.youtube.com/embed/_CI6Hq2EcyQ?autoplay=1">
+                      <img src="https://img.youtube.com/vi/_CI6Hq2EcyQ/hqdefault.jpg" alt="Sunday Service 14 Thumbnail">
+                      <div class="thumbnail-overlay"></div>
+                  </div>
+
+                  <div class="video-thumbnail" data-video="https://www.youtube.com/embed/GKlaiIC9xSI?autoplay=1">
+                      <img src="https://img.youtube.com/vi/GKlaiIC9xSI/hqdefault.jpg" alt="Sunday Service 15 Thumbnail">
+                      <div class="thumbnail-overlay"></div>
+                  </div>
+
+                  <div class="video-thumbnail" data-video="https://www.youtube.com/embed/gwXfTT2vi4Y?autoplay=1">
+                      <img src="https://img.youtube.com/vi/gwXfTT2vi4Y/hqdefault.jpg" alt="Sunday Service 16 Thumbnail">
+                      <div class="thumbnail-overlay"></div>
+                  </div>
+
+                  <div class="video-thumbnail" data-video="https://www.youtube.com/embed/wVKNku7Nr0s?autoplay=1">
+                      <img src="https://img.youtube.com/vi/wVKNku7Nr0s/hqdefault.jpg" alt="Sunday Service 17 Thumbnail">
+                      <div class="thumbnail-overlay"></div>
+                  </div>
+
+                  <div class="video-thumbnail" data-video="https://www.youtube.com/embed/DvzX6DZhGrw?autoplay=1">
+                      <img src="https://img.youtube.com/vi/DvzX6DZhGrw/hqdefault.jpg" alt="Sunday Service 18 Thumbnail">
+                      <div class="thumbnail-overlay"></div>
+                  </div>
+
+                  <div class="video-thumbnail" data-video="https://www.youtube.com/embed/5zUgiW67fY0?autoplay=1">
+                      <img src="https://img.youtube.com/vi/5zUgiW67fY0/hqdefault.jpg" alt="Sunday Service 19 Thumbnail">
+                      <div class="thumbnail-overlay"></div>
+                  </div>
+
+                  <div class="video-thumbnail" data-video="https://www.youtube.com/embed/_CI6Hq2EcyQ?autoplay=1">
+                      <img src="https://img.youtube.com/vi/_CI6Hq2EcyQ/hqdefault.jpg" alt="Sunday Service 20 Thumbnail">
+                      <div class="thumbnail-overlay"></div>
+                  </div>
+
+              </div>
+          </div>
+
+          <!-- Main Video (가운데 썸네일이 여기에 반영됨) -->
+          <div class="main-video-container">
+              <iframe id="mainVideo" 
+                      src="https://www.youtube.com/embed/5zUgiW67fY0" 
+                      title="Main Sunday Service Video"
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen>
+              </iframe>
+          </div>
+
+      </div> <!-- .video-container 끝 -->
+
+    </section>
+
+    <!-- ===============================
+         Worship Information Section
+         =============================== -->
+    <section class="worship-info fade-in">
+
+      <!-- Introduction -->
+      <div class="info-card scale-on-hover">
+        <h3>Introduction</h3>
+        <p>
+          Worship is a time to exalt God and unite as one community of faith. 
+          It is not just a ritual but a living encounter with the Lord, 
+          where we bring our hearts in praise, prayer, and surrender.
+        </p>
+        <div class="scripture-quote">
+          📖 <em>"Come, let us bow down in worship, let us kneel before the Lord our Maker."</em> – Psalm 95:6
+        </div>
+      </div>
+
+      <!-- Schedule & Location -->
+      <div class="info-card scale-on-hover">
+        <h3>Schedule & Location</h3>
+        <ul>
+          <li><strong>When</strong>: Every Sunday, <strong>2:00 PM – 4:00 PM</strong></li>
+          <li><strong>Where</strong>: Main Sanctuary</li>
+          <li><strong>Online Worship</strong>: 
+            <a href="https://www.youtube.com/@IMUSAIM/featured" class="online-link">▶ Watch Online on YouTube</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Order of Worship -->
+      <div class="info-card scale-on-hover">
+        <h3>Order of Worship</h3>
+        <ol>
+          <li>Praise & Prayer</li>
+          <li>Sermon</li>
+          <li>Praise & Prayer</li>
+          <li>Benediction</li>
+        </ol>
+      </div>
+
+      <!-- Special Gatherings -->
+      <div class="info-card scale-on-hover">
+        <h3>Special Gatherings</h3>
+        <ul>
+          <li><strong>Communion</strong> – Celebrating the Lord's Supper together.</li>
+          <li><strong>Life Group</strong> – Small group fellowship to grow deeper in faith and relationships.</li>
+        </ul>
+      </div>
+
+      <!-- Worship Teams & Volunteers -->
+      <div class="info-card scale-on-hover">
+        <h3>Worship Teams & Volunteers</h3>
+        <ul>
+          <li>
+            <strong>Praise Team (Battle Cry)</strong>: 
+            A passionate worship community of the young generation, 
+            leading the church in heartfelt praise and adoration.
+          </li>
+          <li>
+            <strong>Media Team</strong>: 
+            Serving behind the scenes with sound, visuals, and livestream support 
+            to ensure worship is experienced both onsite and online.
+          </li>
+        </ul>
+      </div>
+
+    </section>
+
+  </main> <!-- main.content 끝 -->
+
+  <!-- ===============================
+       JavaScript: Video Gallery Logic (INTO Worship 스타일로 통일)
+       =============================== -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const galleryContainer = document.getElementById("galleryContainer");
+      const thumbnails = document.querySelectorAll(".video-thumbnail");
+      const mainVideo = document.getElementById("mainVideo");
+
+      let currentIndex = 0;
+
+      // --------------------------------
+      // Header Dropdown Functionality
+      // --------------------------------
+      const menuItems = document.querySelectorAll('.menu-item');
+      menuItems.forEach(item => {
+          const dropdown = item.querySelector('.dropdown');
+          if (dropdown) {
+              item.addEventListener('mouseenter', () => {
+                  dropdown.style.display = 'block';
+              });
+              item.addEventListener('mouseleave', () => {
+                  dropdown.style.display = 'none';
+              });
+          }
+      });
+
+      // --------------------------------
+      // 중앙에 위치한 썸네일 찾기
+      // --------------------------------
+      function findCenterThumbnail() {
+        let containerRect = galleryContainer.getBoundingClientRect();
+        let containerCenter = containerRect.left + containerRect.width / 2;
+        let closestIndex = 0;
+        let closestDistance = Infinity;
+
+        thumbnails.forEach((thumb, i) => {
+          let rect = thumb.getBoundingClientRect();
+          let thumbCenter = rect.left + rect.width / 2;
+          let distance = Math.abs(containerCenter - thumbCenter);
+
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestIndex = i;
+          }
+        });
+
+        return closestIndex;
+      }
+
+      // --------------------------------
+      // 메인 영상 업데이트
+      // --------------------------------
+      function updateMainVideo(index) {
+        if (index < 0 || index >= thumbnails.length) return;
+
+        currentIndex = index;
+        const videoUrl = thumbnails[index].dataset.video;
+
+        if (mainVideo.src !== videoUrl) {
+          mainVideo.src = videoUrl;
+        }
+      }
+
+      // --------------------------------
+      // 스크롤 감지 → 메인 교체
+      // --------------------------------
+      let scrollTimeout;
+      galleryContainer.addEventListener("scroll", () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          let index = findCenterThumbnail();
+          if (index !== currentIndex) {
+            updateMainVideo(index);
+          }
+        }, 150);
+      });
+
+      // --------------------------------
+      // 초기 로드 시 중앙 영상 반영
+      // --------------------------------
+      updateMainVideo(findCenterThumbnail());
+    });
+  </script>
+
+  <!-- ===============================
+       Global Fade-in Observer Script
+       =============================== -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px"
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll(".fade-in").forEach(el => {
+        observer.observe(el);
+      });
+    });
+  </script>
+</body>
+</html>
